@@ -1,0 +1,7 @@
+I wish the copilot could make the files for me.
+I wish I could highlight my code and have an option for Copilot to modify it adding the right header files and putting the code in the right places and analyzing the code too.
+Copilot was very helpful getting me to code things really fast.
+Copilot has pros and cons for people who are learning how to code.
+    It can teach you, but you kinda need some basic knowledge to understand what it is saying.
+    It also gives too much code to you that if you don't understand what it's doing, you won't learn anything.
+Copilot was also good at teaching me how to install certain libraries for my particular OS
