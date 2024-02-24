@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "functions.h"
 
 int* count_character_frequencies(const char* filename) {
@@ -8,7 +9,18 @@ int* count_character_frequencies(const char* filename) {
         return NULL;
     }
 
-    static int frequency[256] = {0};
+    int* frequency = (int*)malloc(256 * sizeof(int));
+    if (frequency == NULL) {
+        printf("Error allocating memory.\n");
+        fclose(file);
+        return NULL;
+    }
+
+    // Initialize all frequencies to 0
+    for (int i = 0; i < 256; i++) {
+        frequency[i] = 0;
+    }
+
     int c;
     while ((c = fgetc(file)) != EOF) {
         frequency[c]++;

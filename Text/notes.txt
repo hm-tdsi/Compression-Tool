@@ -5,3 +5,8 @@ Copilot has pros and cons for people who are learning how to code.
     It can teach you, but you kinda need some basic knowledge to understand what it is saying.
     It also gives too much code to you that if you don't understand what it's doing, you won't learn anything.
 Copilot was also good at teaching me how to install certain libraries for my particular OS
+It is good at giving me code that is in context with the rest of my code.
+I saw an issue in the code that Copilot gave me and I decided to make a comment about it to fix it later and Copilot wrote the comment that I was about to write
+Copilot gave me good suggestions for debugging seg fault issues
+Copilot gave me functions that didn't make sense and I had to ask it again to redo it.
+Copilot can fix a seg fault error, but wasn't able to fix a bug in the code it gave me.
