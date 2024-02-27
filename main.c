@@ -205,19 +205,72 @@ struct Node* buildHuffmanTree(int* frequencies) {
 }
 
 // Function to print the Huffman binary tree
-void printHuffmanTree(struct Node* root) {
+void printHuffmanTree(struct Node* root, int depth) {
     if (root == NULL) {
         return;
     }
 
     // Print the current node
+    for (int i = 0; i < depth; i++)
+    {
+        printf("  ");
+    }
     printf("Character: '%c', Frequency: %d\n", root->character, root->frequency);
 
     // Recursively print the left and right subtrees
-    printf("Left subtree:\n");
-    printHuffmanTree(root->left);
-    printf("Right subtree:\n");
-    printHuffmanTree(root->right);
+    if (root->left != NULL)
+    {
+        for (int i = 0; i < depth; i++)
+        {
+            printf("  ");
+        }
+        printf("Left -->:\n");
+        printHuffmanTree(root->left, depth + 1);
+    }
+    if (root->right != NULL)
+    {
+        for (int i = 0; i < depth; i++)
+        {
+            printf("  ");
+        }
+        printf("Right -->:\n");
+        printHuffmanTree(root->right, depth + 1);
+    }
+}
+
+// Function to generate the prefix-code table using the Huffman tree
+void generatePrefixCodeTable(struct Node* root, char* prefixCode, int depth, char** prefixCodeTable) {
+    if (root == NULL) {
+        return;
+    }
+
+    // Check if the current node is a leaf node
+    if (root->left == NULL && root->right == NULL) {
+        // Assign the prefix code to the character in the prefix code table
+        prefixCodeTable[root->character] = strdup(prefixCode);
+        //printf("Character '%c': %s\n", root->character, prefixCode);
+        return;
+    }
+
+    // Append '0' to the prefix code and traverse the left subtree
+    prefixCode[depth] = '0';
+    prefixCode[depth + 1] = '\0';
+    generatePrefixCodeTable(root->left, prefixCode, depth + 1, prefixCodeTable);
+
+    // Append '1' to the prefix code and traverse the right subtree
+    prefixCode[depth] = '1';
+    prefixCode[depth + 1] = '\0';
+    generatePrefixCodeTable(root->right, prefixCode, depth + 1, prefixCodeTable);
+}
+
+// Function to print the prefix-code table 
+void printPrefixCodeTable(char** prefixCodeTable) {
+    printf("Prefix-code table:\n");
+    for (int i = 0; i < NUM_CHARACTERS; i++) {
+        if (prefixCodeTable[i] != NULL) {
+            printf("Character '%c': %s\n", i, prefixCodeTable[i]);
+        }
+    }
 }
 
 int main(void) {
@@ -225,8 +278,8 @@ int main(void) {
     //printf("Enter the filename: ");
     //scanf("%s", filename);
     //strcpy(filename, "Text/135-0.txt");
-    strcpy(filename, "Text/test.txt");
-    //strcpy(filename, "Text/huffman-test.txt");
+    //strcpy(filename, "Text/test.txt");
+    strcpy(filename, "Text/huffman-test.txt");
 
     int* frequencies = count_character_frequencies(filename);
     if (frequencies == NULL) {
@@ -243,10 +296,20 @@ int main(void) {
     printf("Building Huffman binary tree:\n");
     struct Node* root = buildHuffmanTree(frequencies);
 
-    // TODO: Perform further operations with the Huffman binary tree
     // Print the Huffman binary tree
     printf("\nPrinting Huffman binary tree:\n");
-    printHuffmanTree(root);
+    printHuffmanTree(root, 0);
+
+    // Generate the prefix-code table using the Huffman tree
+    // This is a table to store the prefix code for each character
+    char* prefixCodeTable[NUM_CHARACTERS] = {0};
+    // This is a string to store the generated prefix code
+    char prefixCode[NUM_CHARACTERS] = {0};
+    prefixCode[0] = '\0';
+    generatePrefixCodeTable(root, prefixCode, 0, prefixCodeTable);
+
+    // Print the prefix-code table
+    printPrefixCodeTable(prefixCodeTable);
 
     // Free the memory allocated for the frequencies
     free(frequencies);
