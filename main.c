@@ -273,6 +273,27 @@ void printPrefixCodeTable(char** prefixCodeTable) {
     }
 }
 
+// Header section for decoding the compressed file
+struct Header {
+    int frequencies[NUM_CHARACTERS];
+};
+
+// Function to write the header section to the output file
+void writeHeader(FILE* outputFile, int* frequencies) {
+    struct Header header;
+    for (int i = 0; i < 256; i++) {
+        if (frequencies[i] > 0) {
+            printf("Character '%c' occurs %d times.\n", i, frequencies[i]);
+        }
+    }
+    memcpy(header.frequencies, frequencies, sizeof(int) * NUM_CHARACTERS);
+    fwrite(frequencies, sizeof(int), NUM_CHARACTERS, outputFile);
+
+    // Write a separator between the header and the compressed data
+    char separator[] = "-----SEPARATOR-----";
+    fwrite(separator, sizeof(char), strlen(separator), outputFile);
+}
+
 int main(void) {
     char filename[100];
     //printf("Enter the filename: ");
@@ -311,7 +332,37 @@ int main(void) {
     // Print the prefix-code table
     printPrefixCodeTable(prefixCodeTable);
 
+    FILE* outputFile = fopen("output", "wb");
+    writeHeader(outputFile, frequencies);
+    fclose(outputFile);
     // Free the memory allocated for the frequencies
     free(frequencies);
+
+    // This starts the decompression part
+    // Open the output file
+    printf("Opening the output file...\n");
+    outputFile = fopen("output", "rb");
+    if (outputFile == NULL) {
+        printf("Failed to open the output file.\n");
+        return -1;
+    }
+
+    // Read the header section from the output file
+    struct Header header;
+    fread(header.frequencies, sizeof(int), NUM_CHARACTERS, outputFile);
+
+    // Print the frequencies of each character
+    printf("Frequencies of each character:\n");
+    for (int i = 0; i < NUM_CHARACTERS; i++) {
+        if (header.frequencies[i] > 0) {
+            printf("Character '%c': %d\n", i, header.frequencies[i]);
+        }
+    }
+
+    // Close the output file
+    fclose(outputFile);
+
+
+
     return 0;
 }
