@@ -290,7 +290,7 @@ void writeHeader(FILE* outputFile, int* frequencies) {
     fwrite(frequencies, sizeof(int), NUM_CHARACTERS, outputFile);
 
     // Write a separator between the header and the compressed data
-    char separator[] = "-----SEPARATOR-----";
+    char separator[] = "===SEPARATOR!===";
     fwrite(separator, sizeof(char), strlen(separator), outputFile);
 }
 
@@ -334,9 +334,56 @@ int main(void) {
 
     FILE* outputFile = fopen("output", "wb");
     writeHeader(outputFile, frequencies);
-    fclose(outputFile);
+
     // Free the memory allocated for the frequencies
     free(frequencies);
+
+    // This starts the compression part
+    // Open the source text file
+    FILE* sourceFile = fopen(filename, "r");
+    if (sourceFile == NULL) {
+        printf("Failed to open the source file.\n");
+        return -1;
+    }
+
+    // Encode and write the compressed content to the output file
+    printf("Encoding and writing compressed content...\n");
+    char ch;
+    unsigned char byte = 0;
+    int bitCount = 0;
+    while ((ch = fgetc(sourceFile)) != EOF) {
+        char* prefix = prefixCodeTable[ch];
+        int prefixLength = strlen(prefix);
+        for (int i = 0; i < prefixLength; i++) {
+            if (prefix[i] == '1') {
+                byte |= (1 << (7 - bitCount));
+            }
+            bitCount++;
+            if (bitCount == 8) {
+                fwrite(&byte, sizeof(unsigned char), 1, outputFile);
+                printf("Byte: %x\n", byte);
+                byte = 0;
+                bitCount = 0;
+            }
+        }
+    }
+
+    // Write the remaining bits if any
+    if (bitCount > 0) {
+        fwrite(&byte, sizeof(unsigned char), 1, outputFile);
+        printf("Byte: %x\n", byte);
+    }
+
+    // Close the source file and output file
+    fclose(sourceFile);
+
+    fclose(outputFile);
+    // This ends the compression part
+
+
+
+
+
 
     // This starts the decompression part
     // Open the output file

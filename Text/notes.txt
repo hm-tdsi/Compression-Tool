@@ -12,3 +12,20 @@ Copilot gave me functions that didn't make sense and I had to ask it again to re
 Copilot can fix a seg fault error, but wasn't able to fix a bug in the code it gave me.
 I tried making the print look prettier and Copilot knew what I was trying to do and autofilled the code for me.
 Copilot is good ad explaining compile warnings and errors and suggestions for how to debug.
+
+Character 'C': 1110
+Character 'D': 110
+Character 'E': 0
+Character 'K': 111101
+Character 'L': 101
+Character 'M': 11111
+Character 'U': 100
+Character 'Z': 111100
+
+EEEE EEEE EEEE EEEE EEEE EEEE EEEE EEEE
+DB6D B6DB 6DB6 DB6D B6DB 6DB6 DB6D B6D8
+0000 0000 0000 0000 0000 0000 0000 03DF
+7DF7 DF7D B6DB 6DB6 DB6D B6DB 6DB6 DB6D
+B6DB 6DB7 FFFF FFFF FFFF FFFF FFFF FFFF
+FFFF FE49 2492 4924 9249 2492 4924 9249
+279E 00
